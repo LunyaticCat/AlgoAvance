@@ -95,6 +95,9 @@ public class Arbre {
         if(estVide(a)){
             return Integer.MAX_VALUE;
         }
+        if(estVide(a.filsG) && estVide(a.filsD)){
+            return a.val;
+        }
         if(!estVide(a.filsG)) {
             result0 = a.val + meilleurChemin(a.filsG);
         }
@@ -102,5 +105,25 @@ public class Arbre {
             result1 = a.val + meilleurChemin(a.filsD);
         }
         return Math.min(result0, result1);
+    }
+
+    public static boolean chercheFeuille(Arbre a, int x){
+        if(estVide(a)){
+            return false;
+        }
+        if(estVide(a.filsG) && estVide(a.filsD)) {
+            return a.val == x;
+        }
+        return chercheFeuille(a.filsG, x) || chercheFeuille(a.filsD, x);
+    }
+
+    public static boolean chercheNoeudInterne(Arbre a, int x){
+        if(estVide(a)){
+            return false;
+        }
+        if(estVide(a.filsG) && estVide(a.filsD)) {
+            return false;
+        }
+        return a.val == x || chercheNoeudInterne(a.filsG, x) || chercheNoeudInterne(a.filsD, x);
     }
 }

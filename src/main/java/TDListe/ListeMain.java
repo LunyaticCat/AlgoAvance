@@ -1,6 +1,6 @@
 package TDListe;
 
-public class main {
+public class ListeMain {
     public static void main(String[] args) {
         Liste l1 = new Liste(2);
         Liste l2 = new Liste(1, l1);
