@@ -30,36 +30,6 @@ public class Arbre {
         else return toStringV2aux(a.filsD, s + "   ") + s + a.val + "\n" + toStringV2aux(a.filsG, s + "   ");
     }
 
-    public static String toStringTrie(Arbre a){
-        return  toStringTrieAux(a,"");
-    }
-
-    public static String toStringTrieAux(Arbre a, String s){
-        if (estVide(a)) return "";
-        else return toStringTrieAux(a.filsG, s + "   ") + s + a.val + "\n" + toStringV2aux(a.filsD, s + "   ");
-    }
-
-    public static int nbEntiers(Arbre a){
-        if(estVide(a)){
-            return 0;
-        }
-        else{
-           return 1 + nbEntiers(a.filsD) + nbEntiers(a.filsG);
-        }
-    }
-
-    public static int nbFeuilles(Arbre a){
-        if(estVide(a)){
-            return 0;
-        }
-        else{
-            if(estVide(a.filsG) && estVide(a.filsD)){
-                return 1;
-            }
-            return nbFeuilles(a.filsD) + nbFeuilles(a.filsG);
-        }
-    }
-
     public static boolean recherche(Arbre a, int x){
         if(estVide(a)){
             return false;
@@ -75,67 +45,49 @@ public class Arbre {
         }
     }
 
-    public static boolean pereFilsEgaux(Arbre a){
-        if(estVide(a)){
-            return false;
-        }
-        if(!estVide(a.filsG)) {
-            if (a.val == a.filsG.val) {
-                return true;
-            }
-        }
-        if(!estVide(a.filsD)) {
-            if (a.val == a.filsD.val) {
-                return true;
-            }
-        }
-            return pereFilsEgaux(a.filsG) || pereFilsEgaux(a.filsD);
+    public static String toStringTrie(Arbre a){
+        if (estVide(a)) return "";
+        else return toStringTrie(a.filsG) + " " + a.val + toStringTrie(a.filsD);
     }
 
-    public static Arbre symetrise(Arbre a){
+    public static Arbre insert(Arbre a, int x){
+        if(estVide(a)){
+            return new Arbre(x);
+        }
+        if(x <= a.val){
+            a.filsG = insert(a.filsG, x);
+        }
+        else{
+            a.filsD = insert(a.filsD, x);
+        }
+        return a;
+    }
+
+    public static Arbre suppr(Arbre a,int x){
         if(estVide(a)){
             return null;
         }
-        Arbre result = new Arbre(a.val, null, null);
-        result.filsG = symetrise(a.filsD);
-        result.filsD = symetrise(a.filsG);
-        return result;
+        if(a.val > x){
+            a.filsG = suppr(a.filsG, x);
+        }
+        else if (a.val < x){
+            a.filsD = suppr(a.filsD, x);
+        }
+        else {
+            if(estVide(a.filsG)){
+                return a.filsD;
+            }
+            if(estVide(a.filsD)){
+                return a.filsG;
+            }
+            int maxTemp = max(a.filsG);
+            a.filsG = suppr(a.filsG, maxTemp);
+            a.val = maxTemp;
+        }
+        return a;
     }
 
-    public static int meilleurChemin(Arbre a){
-        int result0 = Integer.MAX_VALUE, result1 = Integer.MAX_VALUE;
-        if(estVide(a)){
-            return Integer.MAX_VALUE;
-        }
-        if(estVide(a.filsG) && estVide(a.filsD)){
-            return a.val;
-        }
-        if(!estVide(a.filsG)) {
-            result0 = a.val + meilleurChemin(a.filsG);
-        }
-        if(!estVide(a.filsD)) {
-            result1 = a.val + meilleurChemin(a.filsD);
-        }
-        return Math.min(result0, result1);
-    }
+    public static int max(Arbre a){
 
-    public static boolean chercheFeuille(Arbre a, int x){
-        if(estVide(a)){
-            return false;
-        }
-        if(estVide(a.filsG) && estVide(a.filsD)) {
-            return a.val == x;
-        }
-        return chercheFeuille(a.filsG, x) || chercheFeuille(a.filsD, x);
-    }
-
-    public static boolean chercheNoeudInterne(Arbre a, int x){
-        if(estVide(a)){
-            return false;
-        }
-        if(estVide(a.filsG) && estVide(a.filsD)) {
-            return false;
-        }
-        return a.val == x || chercheNoeudInterne(a.filsG, x) || chercheNoeudInterne(a.filsD, x);
     }
 }
